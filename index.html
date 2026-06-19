@@ -43,8 +43,35 @@
     .logo img { height: 32px; width: auto; display: block; }
     .logo-text { font-size: 14px; font-weight: 600; color: #fff; line-height: 1.2; }
     .logo-text span { display: block; font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400; }
-    .topbar-help { font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; }
-    .topbar-help:hover { color: #fff; }
+    /* ── CHAT TOGGLE ── */
+    .chat-btn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 100;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--navy); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3); transition: transform 0.2s, background 0.2s;
+    }
+    .chat-btn:hover { background: var(--red); transform: scale(1.08); }
+    .chat-btn svg { width: 22px; height: 22px; }
+    .chat-bubble {
+      position: fixed; bottom: 86px; right: 24px; z-index: 100;
+      background: var(--white); border-radius: var(--radius-md);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18); padding: 16px 18px;
+      width: 240px; font-size: 13px; line-height: 1.5; color: var(--gray-700);
+      display: none; animation: bubbleIn 0.18s ease;
+    }
+    .chat-bubble.open { display: block; }
+    @keyframes bubbleIn { from { opacity:0; transform: translateY(8px) scale(0.97); } to { opacity:1; transform: none; } }
+    .chat-bubble::after {
+      content: ''; position: absolute; bottom: -7px; right: 18px;
+      width: 14px; height: 14px; background: var(--white);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+    .chat-bubble-title { font-weight: 600; color: var(--gray-900); margin-bottom: 6px; }
+    .chat-bubble a { display: flex; align-items: center; gap: 8px; padding: 8px 0; color: var(--gray-600); text-decoration: none; border-top: 1px solid var(--gray-100); font-size: 12px; }
+    .chat-bubble a:first-of-type { border-top: none; padding-top: 4px; }
+    .chat-bubble a:hover { color: var(--red); }
+    .chat-bubble a svg { flex-shrink: 0; }
 
     /* ── PROGRESS ── */
     .progress-wrap {
@@ -285,7 +312,6 @@
     <a href="https://versaeducacao.com.br" class="logo" target="_blank">
       <img src="imagens/logo-universa.png" alt="Universa by Versa Educação" />
     </a>
-    <a href="mailto:contato@versaeducacao.com.br" class="topbar-help">Precisa de ajuda?</a>
   </header>
 
   <div class="progress-wrap" id="progress-wrap">
@@ -300,6 +326,38 @@
     <div class="form-card card-enter" id="form-card"></div>
   </div>
 </div>
+
+<!-- Floating help toggle -->
+<div class="chat-bubble" id="chat-bubble">
+  <div class="chat-bubble-title">Precisa de ajuda?</div>
+  <a href="https://wa.me/5511999999999" target="_blank">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12c0 1.89.522 3.66 1.43 5.18L2 22l4.95-1.41A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Zm0 18a8 8 0 0 1-4.1-1.13l-.29-.18-3.03.86.87-2.93-.19-.3A8 8 0 1 1 12 20Zm4.41-5.78c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.92-1.18-.71-.63-1.19-1.41-1.33-1.65-.14-.24-.01-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.41-.54-.42h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.58.18 1.1.16 1.52.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z"/></svg>
+    Falar no WhatsApp
+  </a>
+  <a href="mailto:contato@versaeducacao.com.br">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z"/></svg>
+    Enviar e-mail
+  </a>
+</div>
+<button class="chat-btn" id="chat-btn" aria-label="Precisa de ajuda?">
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24">
+    <path fill="#fff" d="M20 2H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h3l3 3 3-3h7a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-9 11H7v-2h4v2Zm6 0h-4v-2h4v2Zm0-4H7V7h10v2Z"/>
+  </svg>
+</button>
+<script>
+  (function(){
+    var btn = document.getElementById('chat-btn');
+    var bubble = document.getElementById('chat-bubble');
+    btn.addEventListener('click', function(){
+      bubble.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e){
+      if (!btn.contains(e.target) && !bubble.contains(e.target)) {
+        bubble.classList.remove('open');
+      }
+    });
+  })();
+</script>
 
 <script>
 // ─── STATE ───────────────────────────────────────────────
