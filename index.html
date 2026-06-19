@@ -562,6 +562,15 @@ function selectRadio(el, sel) {
   document.querySelectorAll(sel).forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected');
 }
+function selectRadioAndAdvance(el, sel) {
+  selectRadio(el, sel);
+  setTimeout(advance, 320);
+}
+// footer for auto-advance steps: only back button + subtle hint
+function qBackOnly() {
+  const backBtn = step > 0 ? `<button class="btn-back" onclick="back()">Voltar</button>` : `<span></span>`;
+  return `<div class="q-footer">${backBtn}<span style="font-size:12px;color:var(--gray-400)">Clique em uma opção para avançar</span></div>`;
+}
 function selectOpt(el) {
   el.closest('.opt-list').querySelectorAll('.opt-item').forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected');
@@ -654,6 +663,9 @@ function render() {
   document.querySelector('.scroll-area').scrollTop=0;
   setTimeout(()=>{const f=card.querySelector('.big-input,.form-input');if(f&&step>0)f.focus();},80);
   if(step===TOTAL_STEPS-1) startCountdown();
+  // scripts inside innerHTML don't execute — trigger side-effects here
+  const unitsStep = [s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s15,s12,s13,s14,s16].indexOf(s11);
+  if(step===unitsStep) setTimeout(renderUnits,0);
 }
 
 function startCountdown() {
@@ -728,11 +740,11 @@ function s2() {
     <div class="q-body">
       ${qNum(3)}
       <h2 class="q-title">Qual é o CNPJ da empresa?</h2>
-      <p class="q-sub">Necessário para emissão de contrato e nota fiscal.</p>
+      <p class="q-sub">Usado para identificar sua empresa na plataforma. Você pode pular e informar depois.</p>
       <input class="big-input" type="text" placeholder="00.000.000/0001-00" maxlength="18" onkeyup="maskCNPJ(this)" />
       ${enterHint()}
     </div>
-    ${qFooter(true,'Confirmar')}`;
+    ${qFooter(true,'Confirmar','Pular')}`;
 }
 
 // STEP 3 — site
@@ -794,7 +806,7 @@ function s6() {
     <div class="q-body">
       ${qNum(7)}
       <h2 class="q-title">Em qual segmento sua empresa atua?</h2>
-      <p class="q-sub">Selecione quantos quiser. Usamos isso para personalizar os cursos e relatórios.</p>
+      <p class="q-sub">Selecione quantos quiser e clique em Confirmar. Usamos isso para personalizar cursos e relatórios.</p>
       <div class="chip-grid">${chips}</div>
     </div>
     ${qFooter(true,'Confirmar')}`;
@@ -815,10 +827,10 @@ function s7() {
       <h2 class="q-title">Quantos colaboradores sua empresa tem?</h2>
       <p class="q-sub">Escolha a faixa mais próxima da realidade.</p>
       <div class="radio-grid">
-        ${sizes.map((r,i)=>`<div class="radio-card${i===1?' selected':''}" onclick="selectRadio(this,'.radio-grid .radio-card')"><div class="radio-card-icon">${r.icon}</div><div class="radio-card-label">${r.label}</div></div>`).join('')}
+        ${sizes.map((r,i)=>`<div class="radio-card" onclick="selectRadioAndAdvance(this,'.radio-grid .radio-card')"><div class="radio-card-icon">${r.icon}</div><div class="radio-card-label">${r.label}</div></div>`).join('')}
       </div>
     </div>
-    ${qFooter(true,'Confirmar')}`;
+    ${qBackOnly()}`;
 }
 
 // STEP 8 — como soube
@@ -828,12 +840,12 @@ function s8() {
     <div class="q-body">
       ${qNum(9)}
       <h2 class="q-title">Como você ficou sabendo da Versa?</h2>
-      <p class="q-sub">Clique em uma opção para avançar automaticamente.</p>
+      <p class="q-sub">Clique em uma opção para avançar.</p>
       <div class="opt-list">
         ${opts.map((o,i)=>`<div class="opt-item" onclick="selectOpt(this)"><div class="opt-key">${String.fromCharCode(65+i)}</div><span class="opt-label">${o}</span></div>`).join('')}
       </div>
     </div>
-    ${qFooter(true,'Confirmar')}`;
+    ${qBackOnly()}`;
 }
 
 // STEP 9 — objetivos
@@ -849,7 +861,7 @@ function s9() {
     <div class="q-body">
       ${qNum(10)}
       <h2 class="q-title">O que sua empresa busca com a plataforma?</h2>
-      <p class="q-sub">Selecione todos os objetivos que se aplicam.</p>
+      <p class="q-sub">Selecione todos que se aplicam e clique em Confirmar.</p>
       <div class="check-list">
         ${goals.map(([ico,t,s],i)=>`
           <div class="check-item${i<1?' selected':''}" onclick="this.classList.toggle('selected')">
@@ -873,7 +885,7 @@ function s10() {
         ${opts.map((o,i)=>`<div class="opt-item" onclick="selectOpt(this)"><div class="opt-key">${String.fromCharCode(65+i)}</div><span class="opt-label">${o}</span></div>`).join('')}
       </div>
     </div>
-    ${qFooter(true,'Confirmar')}`;
+    ${qBackOnly()}`;
 }
 
 // STEP 11 — unidades
@@ -898,8 +910,7 @@ function s11() {
         <p class="form-hint" style="margin-top:8px">Você pode adicionar mais unidades depois dentro da plataforma.</p>
       </div>
     </div>
-    ${qFooter(true,'Confirmar')}
-    <script>renderUnits();<\/script>`;
+    ${qFooter(true,'Confirmar')}`;
 }
 
 // STEP 12 — cursos
