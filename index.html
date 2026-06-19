@@ -99,14 +99,26 @@
     .card-enter { animation: cardIn 0.22s ease; }
     @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ── STEP 0 HEADER ── */
-    .step-head { background: var(--navy); padding: 20px 28px; display: flex; align-items: center; gap: 12px; }
-    .step-num { width: 32px; height: 32px; background: var(--red); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
-    .step-head h2 { font-size: 15px; font-weight: 600; color: #fff; }
-    .step-head p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
-    .step-body { padding: 26px 28px 8px; }
+    .step-body { padding: 0 28px 8px; }
     .step-title { font-size: 19px; font-weight: 700; color: var(--gray-900); margin-bottom: 5px; }
     .step-sub { font-size: 13px; color: var(--gray-500); margin-bottom: 22px; line-height: 1.6; }
+
+    /* ── TERMS ── */
+    .terms-note { font-size: 12px; color: var(--gray-400); line-height: 1.6; padding: 0 28px 20px; }
+    .terms-note a { color: var(--red); text-decoration: underline; cursor: pointer; }
+    .terms-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+    .terms-overlay.open { display: flex; }
+    .terms-modal { background: #fff; border-radius: var(--radius-md); width: 100%; max-width: 680px; max-height: 82vh; display: flex; flex-direction: column; box-shadow: 0 16px 60px rgba(0,0,0,0.3); }
+    .terms-modal-head { padding: 20px 24px 16px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .terms-modal-head h3 { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+    .terms-modal-close { background: none; border: none; cursor: pointer; font-size: 20px; color: var(--gray-400); line-height: 1; padding: 0; }
+    .terms-modal-close:hover { color: var(--gray-900); }
+    .terms-modal-body { overflow-y: auto; padding: 20px 24px; font-size: 12.5px; color: var(--gray-700); line-height: 1.8; flex: 1; }
+    .terms-modal-body h4 { font-size: 13px; font-weight: 700; color: var(--gray-900); margin: 20px 0 6px; }
+    .terms-modal-body p { margin-bottom: 10px; }
+    .terms-modal-foot { padding: 16px 24px; border-top: 1px solid var(--gray-200); flex-shrink: 0; text-align: right; }
+    .terms-modal-foot button { padding: 10px 24px; background: var(--red); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .terms-modal-foot button:hover { background: var(--red-dark); }
 
     /* ── STEP CONTEXT PILL ── */
     .step-context {
@@ -327,6 +339,57 @@
   </div>
 </div>
 
+<!-- Terms modal -->
+<div class="terms-overlay" id="terms-overlay" onclick="closeTermsOutside(event)">
+  <div class="terms-modal">
+    <div class="terms-modal-head">
+      <h3>Contrato de Prestação de Serviços e Licenças (B2B)</h3>
+      <button class="terms-modal-close" onclick="closeTerms()">×</button>
+    </div>
+    <div class="terms-modal-body">
+      <p>Entre: <strong>VERSA EDUCACIONAL</strong>, pessoa jurídica de direito privado, prestadora dos serviços educacionais digitais e licenças de plataforma; e <strong>CONTRATANTE</strong>, pessoa jurídica que realiza o cadastro neste formulário, representada por seus representantes legais.</p>
+
+      <h4>1. Objeto</h4>
+      <p>A Versa disponibilizará ao CONTRATANTE acesso à plataforma educacional Universa, conteúdos e funcionalidades correlatas, observadas as condições de licenciamento. A contratação poderá ser complementada por Ordens de Serviço que detalharão prazos, escopo e preços.</p>
+
+      <h4>2. Serviços e Escopo</h4>
+      <p>Os cursos definidos exclusivamente pelo CONTRATANTE como obrigatórios destinam-se ao cumprimento de políticas internas, normativos ou requisitos legais. A Versa não enviará cobranças, pressões ou metas individuais relativas a cursos obrigatórios — comunicações desse tipo são responsabilidade exclusiva do RH do CONTRATANTE.</p>
+      <p>A Versa poderá oferecer ao CONTRATANTE catálogos de cursos opcionais para contratação adicional. Tais ofertas são independentes dos cursos obrigatórios e a adesão é facultativa.</p>
+
+      <h4>3. Titularidade de Certificados</h4>
+      <p>Os certificados pertencem ao Aluno (pessoa física), possuem natureza personalíssima, são perpétuos e verificáveis publicamente. Encerrado o vínculo do colaborador com o CONTRATANTE, o Aluno mantém os certificados já emitidos e o acesso a conteúdos gratuitos.</p>
+
+      <h4>4. Propriedade Intelectual</h4>
+      <p>Conteúdos da Versa: licença não exclusiva, intransferível, restrita a uso interno pelos colaboradores do CONTRATANTE para fins educacionais. Conteúdos do CONTRATANTE: licença limitada à Versa para hospedar e disponibilizar os materiais ao público-alvo definido, sem transferência de titularidade.</p>
+
+      <h4>5. Proteção de Dados (LGPD)</h4>
+      <p>A Versa atua como controladora dos dados de conta e certificados dos Alunos; nas trilhas obrigatórias, as partes atuam como controladoras conjuntas ou no modelo controlador–controlador. Bases legais aplicáveis: execução de contrato, cumprimento de obrigação legal e legítimo interesse para analytics anonimizados. A Versa disponibiliza canais para exercício de direitos dos titulares (acesso, correção, portabilidade, eliminação, oposição).</p>
+      <p>Segurança: criptografia em trânsito e repouso, MFA, segregação de ambientes e princípio do menor privilégio. Incidentes serão notificados ao CONTRATANTE em até 72 horas da ciência.</p>
+
+      <h4>6. Disponibilidade e Suporte</h4>
+      <p>Disponibilidade mínima de 99,5% ao mês, excluídas janelas de manutenção avisadas com antecedência mínima de 72 horas e eventos de força maior.</p>
+
+      <h4>7. Preços e Cobrança</h4>
+      <p>Valores, prazos e métricas constarão da Proposta Comercial. Reajuste anual por IPCA ou IGP-M, conforme pactuado, a partir do 12º mês. Atraso: multa de 2%, juros de 1% a.m. e correção monetária. Sem cobrança ao Aluno por cursos obrigatórios patrocinados pelo CONTRATANTE.</p>
+
+      <h4>8. Responsabilidade</h4>
+      <p>Cada parte responderá por danos diretos causados por descumprimento deste Contrato. Ficam excluídos lucros cessantes e danos indiretos, salvo dolo. Responsabilidade total de cada parte limitada ao total pago nos 12 meses anteriores ao evento, exceto em hipóteses de violação intencional à legislação de dados.</p>
+
+      <h4>9. Vigência e Rescisão</h4>
+      <p>Vigência inicial de 12 meses, renovável por períodos sucessivos de 12 meses, salvo manifestação em contrário com 60 dias de antecedência. Rescisão por inadimplemento material não sanado em 30 dias da notificação. Rescisão por conveniência admitida após o 1º ano, mediante aviso com 60 dias.</p>
+
+      <h4>10. Aceite Eletrônico</h4>
+      <p>As partes reconhecem a validade, eficácia e força probatória de aceites digitais realizados por plataformas confiáveis, nos termos da MP 2.200-2/2001 e da Lei 14.063/2020. O ato de clicar em <strong>Continuar</strong> neste formulário constitui aceite eletrônico deste Contrato, com registro de data/hora e identificação do dispositivo, conferindo plena equivalência à assinatura manuscrita.</p>
+
+      <h4>11. Foro</h4>
+      <p>Aplica-se a legislação brasileira. Persistindo conflitos após escalonamento entre as partes, fica eleito o foro da sede da Versa Educação.</p>
+    </div>
+    <div class="terms-modal-foot">
+      <button onclick="closeTerms()">Entendido, fechar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Floating help toggle -->
 <div class="chat-bubble" id="chat-bubble">
   <div class="chat-bubble-title">Precisa de ajuda?</div>
@@ -357,6 +420,19 @@
       }
     });
   })();
+
+  function openTerms(e) {
+    if (e) e.preventDefault();
+    document.getElementById('terms-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeTerms() {
+    document.getElementById('terms-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeTermsOutside(e) {
+    if (e.target === document.getElementById('terms-overlay')) closeTerms();
+  }
 </script>
 
 <script>
@@ -589,9 +665,12 @@ function getStep(s) {
 // STEP 0 — multi-field contato
 function s0() {
   return `
-    <div class="step-head"><div class="step-num">1</div><div><h2>Olá! Vamos criar sua conta.</h2><p>Dados de quem está cadastrando a empresa</p></div></div>
+    <div class="q-body" style="padding-bottom:0">
+      <div class="step-context"><div class="step-context-dot"></div>Seus dados · Etapa 1</div>
+      <h2 class="q-title">Olá! Vamos criar sua conta.</h2>
+      <p class="q-sub">Leva menos de 5 minutos. Você pode pausar e continuar depois.</p>
+    </div>
     <div class="step-body">
-      <p class="step-sub">Leva menos de 5 minutos. Você pode pausar e continuar depois.</p>
       <div class="form-group"><label class="form-label">Nome completo <span class="req">*</span></label><input class="form-input" type="text" placeholder="Ex: Ana Souza" autocomplete="name" /></div>
       <div class="form-group"><label class="form-label">E-mail corporativo <span class="req">*</span></label><input class="form-input" type="email" placeholder="ana@empresa.com.br" autocomplete="email" /></div>
       <div class="form-group"><label class="form-label">WhatsApp <span class="req">*</span></label><input class="form-input" type="tel" placeholder="(11) 99999-9999" onkeyup="maskPhone(this)" /><div class="form-hint">Usado para ativar sua conta e enviar o tutorial.</div></div>
@@ -599,6 +678,7 @@ function s0() {
         <div class="select-wrap"><select class="form-select"><option value="">Selecione seu cargo</option><option>Dono / Sócio</option><option>Diretor(a)</option><option>Gerente de RH</option><option>Gerente de Treinamento</option><option>Gerente Operacional</option><option>Analista de RH</option><option>Assistente Administrativo</option><option>Outro</option></select></div>
       </div>
     </div>
+    <div class="terms-note">Ao clicar em <strong>Continuar</strong>, você concorda com o <a onclick="openTerms(event)">Contrato de Prestação de Serviços</a> da Versa Educação e autoriza o tratamento dos seus dados conforme a LGPD.</div>
     <div class="step-footer end"><button class="btn-next" onclick="advance()">Continuar ${arrow()}</button></div>`;
 }
 
