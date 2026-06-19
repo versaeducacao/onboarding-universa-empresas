@@ -452,7 +452,7 @@ let selectedPalette = 0;
 const STEP_LABELS = [
   'Contato','Razão social','CNPJ','Site','Endereço',
   'Número','Segmento','Porte','Como soube','Objetivos',
-  'Plataforma atual','Unidades','Cursos','Alunos','Identidade visual','Código de ativação','Conclusão'
+  'Plataforma atual','Unidades','Código de ativação','Cursos','Alunos','Identidade visual','Conclusão'
 ];
 const TOTAL_STEPS = STEP_LABELS.length;
 
@@ -505,8 +505,8 @@ const STEP_CONTEXT = [
   'Dados da empresa','Dados da empresa','Dados da empresa','Endereço',
   'Dados da empresa','Segmento e porte','Segmento e porte',
   'Perfil da empresa','Perfil da empresa','Perfil da empresa',
-  'Unidades de negócio','Biblioteca de cursos','Convite de colaboradores',
-  'Identidade visual','Código de ativação','Conclusão'
+  'Unidades de negócio','Código de ativação','Biblioteca de cursos','Convite de colaboradores',
+  'Identidade visual','Conclusão'
 ];
 
 function qNum(n) {
@@ -682,7 +682,7 @@ function startCountdown() {
 
 // ─── STEPS ───────────────────────────────────────────────
 function getStep(s) {
-  const fn = [s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16];
+  const fn = [s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s15,s12,s13,s14,s16];
   return fn[s] ? fn[s]() : '';
 }
 
@@ -919,7 +919,7 @@ function s12() {
     </div>`).join('');
   return `
     <div class="q-body">
-      ${qNum(13)}
+      ${qNum(14)}
       <h2 class="q-title">Quais cursos ficam disponíveis para sua equipe?</h2>
       <p class="q-sub">Você pode alterar essa seleção a qualquer momento.</p>
       <div class="section-label">Incluídos no seu plano</div>
@@ -936,7 +936,7 @@ function s12() {
 function s13() {
   return `
     <div class="q-body">
-      ${qNum(14)}
+      ${qNum(15)}
       <h2 class="q-title">Como quer convidar os primeiros colaboradores?</h2>
       <p class="q-sub">Escolha um método — ou combine vários.</p>
       <div class="invite-grid">
@@ -975,7 +975,7 @@ function s14() {
     </div>`).join('');
   return `
     <div class="q-body">
-      ${qNum(15)}
+      ${qNum(16)}
       <h2 class="q-title">Como é a identidade visual da sua empresa?</h2>
       <p class="q-sub">Personalize a plataforma com o logo e as cores da sua marca.</p>
       <div class="form-group">
@@ -1007,7 +1007,7 @@ function setCouponAnswer(val) {
 function s15() {
   return `
     <div class="q-body">
-      ${qNum(16)}
+      ${qNum(13)}
       <h2 class="q-title">Você foi convidado por uma empresa ou parceiro?</h2>
       <p class="q-sub">Se alguém te indicou a Universa, informe o código de ativação para liberar benefícios exclusivos.</p>
       <div class="opt-list" style="margin-bottom:16px">
