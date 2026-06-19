@@ -333,6 +333,8 @@
       cursor: pointer; font-family: inherit; transition: background 0.15s; text-decoration: none;
     }
     .btn-explore:hover { background: var(--red-dark); }
+    .btn-explore-locked { background: var(--gray-300); cursor: not-allowed; }
+    .btn-explore-locked:hover { background: var(--gray-300); }
     .success-skip { margin-top: 12px; font-size: 12px; color: var(--gray-400); }
     .success-skip a { color: var(--gray-400); }
 
@@ -899,21 +901,50 @@ function step9() {
       <div class="confetti-row">🎊 🎉 🥳 🎊 🎉</div>
       <span class="success-icon">🚀</span>
       <h2 class="success-title">Sua plataforma está pronta!</h2>
-      <p class="success-sub">Parabéns! O Universa já está configurado e pronto para transformar o aprendizado da sua equipe. Antes de começar a explorar, recomendamos assistir ao tutorial rápido — leva menos de 3 minutos.</p>
-      <div class="video-cta" onclick="alert('Abrindo tutorial em vídeo...')">
-        <div class="video-play">▶</div>
-        <div class="video-cta-text">
-          <p>Tutorial rápido de boas-vindas</p>
-          <span>2 min 47 seg · Recomendado antes de começar</span>
-        </div>
+      <p class="success-sub">Parabéns! Assista ao tutorial rápido para aproveitar ao máximo o Universa desde o primeiro dia.</p>
+      <div style="position:relative;width:100%;padding-bottom:56.25%;border-radius:var(--radius-md);overflow:hidden;margin:0 auto 24px;max-width:440px;background:#000">
+        <iframe
+          src="https://www.youtube.com/embed/9A-9dHbZ4VI?rel=0&modestbranding=1"
+          title="Tutorial de boas-vindas — Universa"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+        ></iframe>
       </div>
-      <a href="https://app.versaedu.com.br/" class="btn-explore">
-        Começar a explorar ${arrow()}
+      <a href="https://app.versaedu.com.br/" id="btn-explore" class="btn-explore btn-explore-locked" aria-disabled="true">
+        <span id="btn-explore-label">Aguarde <span id="explore-countdown">8</span>s…</span>
+        <span id="btn-explore-arrow" style="display:none">${arrow()}</span>
       </a>
-      <div class="success-skip">
-        <a href="https://app.versaedu.com.br/" style="color:var(--gray-400)">Pular tutorial e ir direto para a plataforma</a>
+      <div class="success-skip" id="success-skip" style="visibility:hidden">
+        <a href="https://app.versaedu.com.br/" style="color:var(--gray-400)">Pular e ir direto para a plataforma</a>
       </div>
-    </div>`;
+    </div>
+    <script>
+    (function() {
+      var DELAY = 8;
+      var remaining = DELAY;
+      var btn = document.getElementById('btn-explore');
+      var label = document.getElementById('btn-explore-label');
+      var arrowEl = document.getElementById('btn-explore-arrow');
+      var skip = document.getElementById('success-skip');
+      var countdown = document.getElementById('explore-countdown');
+      btn.style.pointerEvents = 'none';
+      var t = setInterval(function() {
+        remaining--;
+        if (countdown) countdown.textContent = remaining + 's';
+        if (remaining <= 0) {
+          clearInterval(t);
+          btn.style.pointerEvents = '';
+          btn.classList.remove('btn-explore-locked');
+          btn.removeAttribute('aria-disabled');
+          label.innerHTML = 'Começar a explorar';
+          arrowEl.style.display = 'inline-flex';
+          if (skip) skip.style.visibility = 'visible';
+        }
+      }, 1000);
+    })();
+    <\/script>`;
 }
 
 // ─── INIT ─────────────────────────────────────────────────
