@@ -652,8 +652,32 @@ function render() {
   card.innerHTML=getStep(step);
   card.className='form-card card-enter';
   document.querySelector('.scroll-area').scrollTop=0;
-  // auto-focus first input
   setTimeout(()=>{const f=card.querySelector('.big-input,.form-input');if(f&&step>0)f.focus();},80);
+  if(step===TOTAL_STEPS-1) startCountdown();
+}
+
+function startCountdown() {
+  var r=8;
+  var btn=document.getElementById('btn-explore');
+  var lbl=document.getElementById('btn-lbl');
+  var arr=document.getElementById('btn-arr');
+  var skip=document.getElementById('s-skip');
+  var cd=document.getElementById('cd');
+  if(!btn) return;
+  btn.style.pointerEvents='none';
+  var t=setInterval(function(){
+    r--;
+    if(cd) cd.textContent=r+'s';
+    if(r<=0){
+      clearInterval(t);
+      btn.style.pointerEvents='';
+      btn.classList.remove('btn-explore-locked');
+      btn.removeAttribute('aria-disabled');
+      if(lbl) lbl.textContent='Começar a explorar';
+      if(arr) arr.style.display='inline-flex';
+      if(skip) skip.style.visibility='visible';
+    }
+  },1000);
 }
 
 // ─── STEPS ───────────────────────────────────────────────
@@ -989,14 +1013,7 @@ function s15() {
         <a href="https://app.versaedu.com.br/">Pular tutorial e ir direto para a plataforma</a>
       </div>
     </div>
-    <script>(function(){
-      var r=8,btn=document.getElementById('btn-explore'),lbl=document.getElementById('btn-lbl'),arr=document.getElementById('btn-arr'),skip=document.getElementById('s-skip'),cd=document.getElementById('cd');
-      btn.style.pointerEvents='none';
-      var t=setInterval(function(){
-        r--;if(cd)cd.textContent=r+'s';
-        if(r<=0){clearInterval(t);btn.style.pointerEvents='';btn.classList.remove('btn-explore-locked');btn.removeAttribute('aria-disabled');lbl.textContent='Começar a explorar';arr.style.display='inline-flex';if(skip)skip.style.visibility='visible';}
-      },1000);
-    })();<\/script>`;
+    `;
 }
 
 // ─── INIT ─────────────────────────────────────────────────
