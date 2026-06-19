@@ -452,7 +452,7 @@ let selectedPalette = 0;
 const STEP_LABELS = [
   'Contato','Razão social','CNPJ','Site','Endereço',
   'Número','Segmento','Porte','Como soube','Objetivos',
-  'Plataforma atual','Unidades','Cursos','Alunos','Identidade visual','Conclusão'
+  'Plataforma atual','Unidades','Cursos','Alunos','Identidade visual','Código de ativação','Conclusão'
 ];
 const TOTAL_STEPS = STEP_LABELS.length;
 
@@ -506,7 +506,7 @@ const STEP_CONTEXT = [
   'Dados da empresa','Segmento e porte','Segmento e porte',
   'Perfil da empresa','Perfil da empresa','Perfil da empresa',
   'Unidades de negócio','Biblioteca de cursos','Convite de colaboradores',
-  'Identidade visual','Conclusão'
+  'Identidade visual','Código de ativação','Conclusão'
 ];
 
 function qNum(n) {
@@ -682,7 +682,7 @@ function startCountdown() {
 
 // ─── STEPS ───────────────────────────────────────────────
 function getStep(s) {
-  const fn = [s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15];
+  const fn = [s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14,s15,s16];
   return fn[s] ? fn[s]() : '';
 }
 
@@ -994,8 +994,44 @@ function s14() {
     ${qFooter(true,'Finalizar configuração','Pular por agora')}`;
 }
 
-// STEP 15 — success
+// STEP 15 — código de ativação / cupom
+let couponAnswer = null; // 'sim' | 'nao'
+function setCouponAnswer(val) {
+  couponAnswer = val;
+  document.querySelectorAll('.coupon-opt').forEach(el => el.classList.remove('selected'));
+  document.getElementById('coupon-opt-'+val).classList.add('selected');
+  document.getElementById('coupon-code-wrap').style.display = val === 'sim' ? 'block' : 'none';
+  if (val === 'nao') setTimeout(advance, 320);
+}
+
 function s15() {
+  return `
+    <div class="q-body">
+      ${qNum(16)}
+      <h2 class="q-title">Você foi convidado por uma empresa ou parceiro?</h2>
+      <p class="q-sub">Se alguém te indicou a Universa, informe o código de ativação para liberar benefícios exclusivos.</p>
+      <div class="opt-list" style="margin-bottom:16px">
+        <div class="opt-item coupon-opt${couponAnswer==='sim'?' selected':''}" id="coupon-opt-sim" onclick="setCouponAnswer('sim')">
+          <div class="opt-check">${couponAnswer==='sim'?chkSvg():''}</div>
+          <span>Sim, tenho um código de ativação</span>
+        </div>
+        <div class="opt-item coupon-opt${couponAnswer==='nao'?' selected':''}" id="coupon-opt-nao" onclick="setCouponAnswer('nao')">
+          <div class="opt-check">${couponAnswer==='nao'?chkSvg():''}</div>
+          <span>Não, entrei por conta própria</span>
+        </div>
+      </div>
+      <div id="coupon-code-wrap" style="display:${couponAnswer==='sim'?'block':'none'}">
+        <label class="form-label">Código de ativação</label>
+        <input class="big-input" type="text" placeholder="Ex: PARCEIRO2025" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()" />
+        <div class="form-hint" style="margin-top:6px">Digite exatamente como foi enviado pelo seu parceiro.</div>
+      </div>
+      ${couponAnswer==='sim' ? enterHint() : ''}
+    </div>
+    ${couponAnswer==='sim' ? qFooter(true,'Confirmar') : '<div style="height:24px"></div>'}`;
+}
+
+// STEP 16 — success
+function s16() {
   return `
     <div class="success-body">
       <div class="confetti-row">🎊 🎉 🥳 🎊 🎉</div>
