@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Universa — Configurar minha conta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #D93E0E;
+      --red-dark: #A32D08;
+      --red-light: #FBE9E4;
+      --red-mid: #F4957A;
+      --navy: #0E1B4D;
+      --navy-light: rgba(14,27,77,0.85);
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --white: #ffffff;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --amber: #F59E0B;
+      --amber-light: #FEF3C7;
+      --purple: #7C3AED;
+      --purple-light: #EDE9FE;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --shadow-card: 0 4px 24px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    html, body { height: 100%; font-family: 'Inter', sans-serif; color: var(--gray-900); overflow: hidden; }
+
+    /* ── BACKGROUND ── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      background: url('imagens/background-blur.jpeg') center/cover no-repeat;
+      filter: blur(18px) brightness(0.55) saturate(0.7);
+      transform: scale(1.05);
+    }
+    .bg-overlay { position: fixed; inset: 0; z-index: 1; background: rgba(14,27,77,0.45); }
+
+    /* ── PAGE ── */
+    .page {
+      position: relative; z-index: 2;
+      height: 100vh; display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      padding: 14px 28px; display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,255,255,0.07); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.10); flex-shrink: 0;
+    }
+    .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .logo-mark {
+      width: 30px; height: 30px; background: var(--red); border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff;
+    }
+    .logo-text { font-size: 14px; font-weight: 600; color: #fff; line-height: 1.2; }
+    .logo-text span { display: block; font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 400; }
+    .topbar-help { font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; }
+    .topbar-help:hover { color: #fff; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      padding: 10px 28px 12px; background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;
+    }
+    .progress-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 7px;
+    }
+    .progress-meta strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+    .progress-track { display: flex; gap: 3px; }
+    .progress-seg {
+      height: 3px; flex: 1; border-radius: 2px; background: rgba(255,255,255,0.15); transition: background 0.4s;
+    }
+    .progress-seg.done { background: var(--red); }
+    .progress-seg.active { background: rgba(217,62,14,0.55); }
+
+    /* ── SCROLL AREA ── */
+    .scroll-area { flex: 1; overflow-y: auto; padding: 24px 16px 40px; display: flex; align-items: flex-start; justify-content: center; }
+    .scroll-area::-webkit-scrollbar { width: 4px; }
+    .scroll-area::-webkit-scrollbar-track { background: transparent; }
+    .scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+    /* ── CARD ── */
+    .form-card {
+      background: var(--white); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card); width: 100%; max-width: 520px; overflow: hidden;
+      animation: cardIn 0.25s ease;
+    }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── STEP HEADER (colored top) ── */
+    .step-head {
+      background: var(--navy); padding: 20px 28px 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .step-num {
+      width: 32px; height: 32px; background: var(--red); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .step-head-text h2 { font-size: 15px; font-weight: 600; color: #fff; line-height: 1.3; }
+    .step-head-text p { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+    /* ── BODY ── */
+    .step-body { padding: 26px 28px 8px; }
+    .step-title { font-size: 20px; font-weight: 700; color: var(--gray-900); margin-bottom: 5px; line-height: 1.3; }
+    .step-sub { font-size: 13px; color: var(--gray-500); margin-bottom: 22px; line-height: 1.6; }
+
+    /* ── FORMS ── */
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 500; color: var(--gray-600); margin-bottom: 5px; }
+    .form-label .req { color: var(--red); }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 10px 13px; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: 14px; color: var(--gray-900);
+      background: var(--white); font-family: inherit; transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none; appearance: none; -webkit-appearance: none;
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--gray-400); }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--red); box-shadow: 0 0 0 3px rgba(217,62,14,0.08);
+    }
+    .form-row { display: flex; gap: 12px; }
+    .form-row .form-group { flex: 1; min-width: 0; }
+    .form-hint { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+    .form-textarea { resize: none; height: 80px; }
+
+    /* ── SELECT CUSTOM ── */
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '▾'; position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%); pointer-events: none; font-size: 12px; color: var(--gray-400);
+    }
+
+    /* ── CHIP GRID (segmentos, etc) ── */
+    .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 7px 14px; border: 1.5px solid var(--gray-200); border-radius: 100px;
+      font-size: 12px; font-weight: 500; color: var(--gray-600); cursor: pointer;
+      transition: all 0.15s; user-select: none; background: var(--white);
+    }
+    .chip:hover { border-color: var(--gray-400); background: var(--gray-50); }
+    .chip.selected { border-color: var(--red); background: var(--red-light); color: var(--red-dark); }
+
+    /* ── RADIO CARDS ── */
+    .radio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .radio-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .radio-card {
+      padding: 14px 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+      cursor: pointer; text-align: center; transition: all 0.15s; user-select: none; background: var(--white);
+    }
+    .radio-card:hover { border-color: var(--gray-400); }
+    .radio-card.selected { border-color: var(--red); background: var(--red-light); }
+    .radio-card-icon { font-size: 22px; margin-bottom: 6px; }
+    .radio-card-label { font-size: 12px; font-weight: 500; color: var(--gray-600); line-height: 1.3; }
+    .radio-card.selected .radio-card-label { color: var(--red-dark); }
+
+    /* ── CHECK ITEMS ── */
+    .check-list { display: flex; flex-direction: column; gap: 8px; }
+    .check-item {
+      display: flex; align-items: flex-start; gap: 11px; padding: 12px 14px;
+      border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .check-item:hover { border-color: var(--gray-300); background: var(--gray-50); }
+    .check-item.selected { border-color: var(--red); background: var(--red-light); }
+    .check-box {
+      width: 18px; height: 18px; border: 1.5px solid var(--gray-300); border-radius: 4px;
+      flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+    }
+    .check-item.selected .check-box { background: var(--red); border-color: var(--red); }
+    .checkmark { display: none; width: 10px; height: 10px; }
+    .check-item.selected .checkmark { display: block; }
+    .check-text { font-size: 13px; color: var(--gray-800); line-height: 1.4; }
+    .check-subtext { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+    .check-item.selected .check-text { color: var(--red-dark); font-weight: 500; }
+
+    /* ── COURSE CARDS ── */
+    .course-grid { display: flex; flex-direction: column; gap: 8px; }
+    .course-card {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+      border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+      cursor: pointer; transition: all 0.15s; position: relative;
+    }
+    .course-card:hover:not(.locked) { border-color: var(--gray-300); background: var(--gray-50); }
+    .course-card.selected { border-color: var(--red); background: var(--red-light); }
+    .course-card.locked { opacity: 0.65; cursor: default; background: var(--gray-50); }
+    .course-thumb {
+      width: 44px; height: 44px; border-radius: 8px; background: var(--navy);
+      display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+    }
+    .course-info { flex: 1; min-width: 0; }
+    .course-name { font-size: 13px; font-weight: 600; color: var(--gray-900); }
+    .course-meta { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+    .course-badge {
+      font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 100px;
+      white-space: nowrap;
+    }
+    .badge-versa { background: var(--red-light); color: var(--red-dark); }
+    .badge-locked { background: var(--amber-light); color: #92400E; display: flex; align-items: center; gap: 4px; }
+    .course-check {
+      width: 20px; height: 20px; border: 1.5px solid var(--gray-300); border-radius: 5px;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+    }
+    .course-card.selected .course-check { background: var(--red); border-color: var(--red); }
+    .course-card.selected .course-check svg { display: block; }
+    .course-card .course-check svg { display: none; }
+
+    /* ── UNITS ── */
+    .unit-list { display: flex; flex-direction: column; gap: 8px; }
+    .unit-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); background: var(--gray-50);
+    }
+    .unit-icon { font-size: 18px; }
+    .unit-name-input {
+      flex: 1; border: none; background: transparent; font-size: 14px;
+      color: var(--gray-900); font-family: inherit; outline: none;
+    }
+    .unit-name-input::placeholder { color: var(--gray-400); }
+    .unit-remove { background: none; border: none; cursor: pointer; color: var(--gray-400); font-size: 18px; line-height: 1; padding: 0 2px; }
+    .unit-remove:hover { color: var(--red); }
+    .add-unit-btn {
+      display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+      border: 1.5px dashed var(--gray-300); border-radius: var(--radius-md);
+      background: none; cursor: pointer; font-size: 13px; color: var(--gray-500);
+      font-family: inherit; transition: all 0.15s; width: 100%;
+    }
+    .add-unit-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
+
+    /* ── INVITE OPTIONS ── */
+    .invite-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .invite-opt {
+      padding: 16px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+      cursor: pointer; text-align: center; transition: all 0.15s; user-select: none;
+    }
+    .invite-opt:hover { border-color: var(--gray-400); background: var(--gray-50); }
+    .invite-opt.selected { border-color: var(--red); background: var(--red-light); }
+    .invite-opt-icon { font-size: 26px; margin-bottom: 8px; }
+    .invite-opt-label { font-size: 12px; font-weight: 600; color: var(--gray-700); }
+    .invite-opt-sub { font-size: 11px; color: var(--gray-400); margin-top: 3px; }
+    .invite-opt.selected .invite-opt-label { color: var(--red-dark); }
+
+    .student-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .student-row .form-input { flex: 1; margin: 0; }
+    .student-row .form-input:first-child { flex: 1.4; }
+    .remove-student { background: none; border: none; cursor: pointer; color: var(--gray-400); font-size: 20px; padding: 0 4px; }
+    .remove-student:hover { color: var(--red); }
+
+    .link-box {
+      display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+      background: var(--gray-100); border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm); font-size: 12px; color: var(--gray-600);
+    }
+    .link-box span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .copy-btn {
+      padding: 5px 12px; background: var(--navy); color: #fff; border: none;
+      border-radius: 6px; font-size: 11px; cursor: pointer; font-family: inherit; white-space: nowrap;
+    }
+    .copy-btn:hover { background: var(--red); }
+
+    .qr-mockup {
+      width: 100px; height: 100px; background: var(--gray-100); border: 1px solid var(--gray-200);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 40px;
+      margin: 0 auto;
+    }
+
+    /* ── BRAND ── */
+    .upload-area {
+      border: 2px dashed var(--gray-300); border-radius: var(--radius-md);
+      padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.15s;
+      background: var(--gray-50);
+    }
+    .upload-area:hover { border-color: var(--red); background: var(--red-light); }
+    .upload-area.has-file { border-color: var(--green); background: var(--green-light); border-style: solid; }
+    .upload-icon { font-size: 32px; margin-bottom: 8px; }
+    .upload-text { font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+    .upload-text strong { color: var(--gray-900); }
+    .upload-input { display: none; }
+
+    .color-palette { display: flex; gap: 8px; flex-wrap: wrap; }
+    .color-swatch {
+      width: 40px; height: 40px; border-radius: 8px; cursor: pointer; border: 3px solid transparent;
+      transition: transform 0.15s, border-color 0.15s; flex-shrink: 0;
+    }
+    .color-swatch:hover { transform: scale(1.1); }
+    .color-swatch.selected { border-color: var(--gray-900); transform: scale(1.12); }
+    .custom-color-wrap { position: relative; }
+    .custom-color-input {
+      width: 40px; height: 40px; border-radius: 8px; border: 2px dashed var(--gray-300);
+      cursor: pointer; padding: 0; overflow: hidden; background: none;
+    }
+
+    /* ── SUCCESS / CELEBRATION ── */
+    .success-body { padding: 40px 28px 32px; text-align: center; position: relative; overflow: hidden; }
+    .confetti-row { display: flex; justify-content: center; gap: 6px; font-size: 24px; margin-bottom: 16px; }
+    .success-icon { font-size: 56px; margin-bottom: 12px; display: block; }
+    .success-title { font-size: 24px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
+    .success-sub { font-size: 14px; color: var(--gray-500); line-height: 1.7; max-width: 360px; margin: 0 auto 24px; }
+    .video-cta {
+      display: flex; align-items: center; gap: 14px; padding: 16px 18px;
+      background: var(--navy); border-radius: var(--radius-md); margin: 0 auto 24px;
+      max-width: 380px; text-align: left; cursor: pointer; transition: opacity 0.15s;
+    }
+    .video-cta:hover { opacity: 0.9; }
+    .video-play {
+      width: 44px; height: 44px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px;
+    }
+    .video-cta-text p { font-size: 13px; font-weight: 600; color: #fff; }
+    .video-cta-text span { font-size: 11px; color: rgba(255,255,255,0.55); }
+    .btn-explore {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 32px; background: var(--red); color: #fff; border: none;
+      border-radius: var(--radius-sm); font-size: 15px; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: background 0.15s; text-decoration: none;
+    }
+    .btn-explore:hover { background: var(--red-dark); }
+    .success-skip { margin-top: 12px; font-size: 12px; color: var(--gray-400); }
+    .success-skip a { color: var(--gray-400); }
+
+    /* ── FOOTER BUTTONS ── */
+    .step-footer {
+      padding: 16px 28px 24px; display: flex; gap: 10px;
+      justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--gray-100);
+    }
+    .step-footer.end { justify-content: flex-end; }
+    .btn-back {
+      padding: 10px 20px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+      background: var(--white); font-size: 14px; color: var(--gray-600);
+      cursor: pointer; font-family: inherit; transition: background 0.15s;
+    }
+    .btn-back:hover { background: var(--gray-100); }
+    .btn-next {
+      padding: 10px 24px; background: var(--red); border: none; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; font-family: inherit;
+      transition: background 0.15s; display: flex; align-items: center; gap: 8px; margin-left: auto;
+    }
+    .btn-next:hover { background: var(--red-dark); }
+    .btn-ghost-link {
+      background: none; border: none; font-size: 13px; color: var(--gray-400);
+      cursor: pointer; font-family: inherit; text-decoration: underline; padding: 10px 0;
+    }
+    .btn-ghost-link:hover { color: var(--gray-600); }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: var(--gray-100); margin: 8px 0 16px; }
+    .section-label { font-size: 11px; font-weight: 600; color: var(--gray-400); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
+
+    /* ── ALERTS ── */
+    .info-box {
+      display: flex; gap: 10px; padding: 12px 14px; background: #EFF6FF; border: 1px solid #BFDBFE;
+      border-radius: var(--radius-sm); font-size: 12px; color: #1D4ED8; line-height: 1.5; margin-bottom: 16px;
+    }
+    .info-box-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── TABLET/MOBILE ── */
+    @media (max-width: 600px) {
+      .topbar { padding: 12px 16px; }
+      .progress-wrap { padding: 8px 16px 10px; }
+      .scroll-area { padding: 16px 10px 32px; }
+      .step-head { padding: 16px 20px; }
+      .step-body { padding: 20px 20px 6px; }
+      .step-footer { padding: 14px 20px 20px; }
+      .success-body { padding: 30px 20px 24px; }
+      .form-row { flex-direction: column; gap: 0; }
+      .invite-grid { grid-template-columns: 1fr 1fr; }
+      .radio-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-overlay"></div>
+
+<div class="page">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <a href="https://versaeducacao.com.br" class="logo" target="_blank">
+      <div class="logo-mark">V</div>
+      <div class="logo-text">Universa <span>by Versa Educação</span></div>
+    </a>
+    <a href="mailto:contato@versaeducacao.com.br" class="topbar-help">Precisa de ajuda?</a>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-meta">
+      <span id="progress-label">Etapa <strong>1</strong> de 10</span>
+      <span id="progress-step-name" style="color:rgba(255,255,255,0.7);font-weight:500;"></span>
+    </div>
+    <div class="progress-track" id="progress-track"></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="scroll-area">
+    <div class="form-card" id="form-card"></div>
+  </div>
+
+</div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────
+let step = 0;
+const TOTAL = 10;
+
+const STEP_NAMES = [
+  'Contato','Empresa','Endereço','Segmento','Perfil',
+  'Unidades','Cursos','Alunos','Identidade visual','Tudo pronto'
+];
+
+const SEGMENTS = [
+  'Varejo alimentar','Varejo não alimentar','Redes de franquias',
+  'Indústria','Logística e transporte','Saúde e farmácias',
+  'Hotelaria e turismo','Construção civil','Serviços financeiros',
+  'Tecnologia','Educação','Outros serviços'
+];
+
+const EMPLOYEE_RANGES = [
+  { icon: '👤', label: 'Até 20' },
+  { icon: '👥', label: '21 – 100' },
+  { icon: '🏢', label: '101 – 500' },
+  { icon: '🏭', label: '501 – 2.000' },
+  { icon: '🌐', label: '2.001+' },
+];
+
+const VERSA_COURSES = [
+  { icon: '🛒', name: 'Atendimento Nota 10', meta: '4h · Versa', tag: 'versa' },
+  { icon: '💼', name: 'Vendas de Sucesso', meta: '6h · Versa', tag: 'versa' },
+  { icon: '🦺', name: 'Segurança do Trabalho (NR-01)', meta: '8h · Versa', tag: 'versa' },
+  { icon: '🍽️', name: 'Boas Práticas de Fabricação', meta: '5h · Versa', tag: 'versa' },
+  { icon: '🎯', name: 'Liderança para Resultados', meta: '7h · Versa', tag: 'versa' },
+  { icon: '🔒', name: 'Ética e Compliance', meta: '3h · Versa', tag: 'versa' },
+  { icon: '😊', name: 'Riscos Psicossociais', meta: '4h · Versa', tag: 'versa' },
+  { icon: '📋', name: '4 Passos do Profissional Incrível', meta: '3h · Versa', tag: 'versa' },
+];
+const LOCKED_COURSES = [
+  { icon: '🏆', name: 'Técnicas de Venda Consultiva', meta: '8h · Friedman', tag: 'locked', partner: 'Friedman' },
+  { icon: '💡', name: 'Gestão de Equipes de Alta Performance', meta: '10h · Friedman', tag: 'locked', partner: 'Friedman' },
+  { icon: '⚡', name: 'Liderança Ágil', meta: '6h · LetzGo', tag: 'locked', partner: 'LetzGo' },
+  { icon: '🚀', name: 'Inovação no Varejo', meta: '5h · LetzGo', tag: 'locked', partner: 'LetzGo' },
+];
+
+const PALETTES = [
+  { label: 'Versa (padrão)', colors: ['#D93E0E','#0E1B4D','#F9FAFB'] },
+  { label: 'Oceano', colors: ['#0EA5E9','#0F172A','#F0F9FF'] },
+  { label: 'Floresta', colors: ['#10B981','#064E3B','#ECFDF5'] },
+  { label: 'Violeta', colors: ['#7C3AED','#1E1B4B','#EDE9FE'] },
+  { label: 'Âmbar', colors: ['#D97706','#292524','#FFFBEB'] },
+  { label: 'Rosa', colors: ['#DB2777','#500724','#FDF2F8'] },
+];
+
+let selectedPalette = 0;
+let units = [{ name: '' }];
+let selectedCourses = new Set([0,1,2,3]);
+let studentRows = [{ name: '', phone: '' }];
+let inviteMode = null;
+let logoFile = null;
+
+// ─── PROGRESS ────────────────────────────────────────────
+function renderProgress() {
+  if (step >= TOTAL - 1) { document.getElementById('progress-wrap').style.display = 'none'; return; }
+  document.getElementById('progress-wrap').style.display = '';
+  document.getElementById('progress-label').innerHTML = `Etapa <strong>${step + 1}</strong> de ${TOTAL - 1}`;
+  document.getElementById('progress-step-name').textContent = STEP_NAMES[step] || '';
+  document.getElementById('progress-track').innerHTML = Array.from({ length: TOTAL - 1 }, (_, i) => {
+    const cls = i < step ? 'done' : i === step ? 'active' : '';
+    return `<div class="progress-seg ${cls}"></div>`;
+  }).join('');
+}
+
+// ─── HELPERS ─────────────────────────────────────────────
+const arrow = () => `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`;
+const check = () => `<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1.5,6 5,9.5 10.5,2.5"/></svg>`;
+
+function advance() { step = Math.min(step + 1, TOTAL - 1); render(); }
+function back() { if (step > 0) { step--; render(); } }
+
+function render() {
+  renderProgress();
+  const card = document.getElementById('form-card');
+  card.innerHTML = getStep(step);
+  card.style.animation = 'none'; card.offsetHeight; card.style.animation = '';
+  document.querySelector('.scroll-area').scrollTop = 0;
+}
+
+function stepHead(num, title, sub) {
+  return `<div class="step-head"><div class="step-num">${num}</div><div class="step-head-text"><h2>${title}</h2><p>${sub}</p></div></div>`;
+}
+function footer(backTxt, nextTxt, skipTxt) {
+  const backBtn = backTxt ? `<button class="btn-back" onclick="back()">${backTxt}</button>` : '<span></span>';
+  const skipBtn = skipTxt ? `<button class="btn-ghost-link" onclick="advance()">${skipTxt}</button>` : '';
+  return `<div class="step-footer">${backBtn}<div style="display:flex;gap:10px;align-items:center">${skipBtn}<button class="btn-next" onclick="advance()">${nextTxt} ${arrow()}</button></div></div>`;
+}
+function maskCNPJ(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,14);
+  if(v.length>12)v=v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,'$1.$2.$3/$4-$5');
+  else if(v.length>8)v=v.replace(/^(\d{2})(\d{3})(\d{3})(\d+)$/,'$1.$2.$3/$4');
+  else if(v.length>5)v=v.replace(/^(\d{2})(\d{3})(\d+)$/,'$1.$2.$3');
+  else if(v.length>2)v=v.replace(/^(\d{2})(\d+)$/,'$1.$2');
+  el.value=v;
+}
+function maskPhone(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>6)v=v.replace(/^(\d{2})(\d{5})(\d+)$/,'($1) $2-$3');
+  else if(v.length>2)v=v.replace(/^(\d{2})(\d+)$/,'($1) $2');
+  el.value=v;
+}
+function maskCEP(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,8);
+  if(v.length>5)v=v.replace(/^(\d{5})(\d+)$/,'$1-$2');
+  el.value=v;
+  if(v.replace(/\D/g,'').length===8) fetchCEP(v.replace(/\D/g,''));
+}
+async function fetchCEP(cep) {
+  try {
+    const r = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const d = await r.json();
+    if(!d.erro){
+      const s=document.getElementById('c-street'); if(s)s.value=d.logradouro||'';
+      const n=document.getElementById('c-neighborhood'); if(n)n.value=d.bairro||'';
+      const c=document.getElementById('c-city'); if(c)c.value=d.localidade||'';
+      const u=document.getElementById('c-uf'); if(u)u.value=d.uf||'';
+    }
+  } catch(e){}
+}
+function selectChip(el) { el.classList.toggle('selected'); }
+function selectRadio(el, selector) {
+  document.querySelectorAll(selector).forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function toggleCourse(idx) {
+  if(selectedCourses.has(idx)) selectedCourses.delete(idx);
+  else selectedCourses.add(idx);
+  render();
+}
+function copyLink() {
+  const link = 'https://app.versaedu.com.br/convite/abc123';
+  navigator.clipboard.writeText(link).then(()=>{
+    const btn = document.querySelector('.copy-btn');
+    if(btn){btn.textContent='Copiado!';setTimeout(()=>btn.textContent='Copiar',2000);}
+  });
+}
+function downloadQR() { alert('QR Code baixado com sucesso!\n(Em produção, gera o PNG real.)'); }
+function handleLogoUpload(el) {
+  const f = el.files[0];
+  if(f){
+    logoFile = f;
+    const area = document.getElementById('upload-area');
+    if(area){
+      area.classList.add('has-file');
+      area.querySelector('.upload-icon').textContent='✅';
+      area.querySelector('.upload-text').innerHTML=`<strong>${f.name}</strong><br>Logo carregado com sucesso`;
+    }
+  }
+}
+
+// ─── UNIT MANAGEMENT ─────────────────────────────────────
+function addUnit() { units.push({name:''}); renderUnits(); }
+function removeUnit(i) { if(units.length>1){units.splice(i,1);renderUnits();} }
+function syncUnit(i,val) { units[i].name=val; }
+function renderUnits() {
+  const container = document.getElementById('units-container');
+  if(!container) return;
+  container.innerHTML = units.map((u,i)=>`
+    <div class="unit-item">
+      <span class="unit-icon">🏪</span>
+      <input class="unit-name-input" placeholder="Ex: Loja Centro, Filial SP..." value="${u.name}"
+        oninput="syncUnit(${i},this.value)" />
+      ${units.length>1?`<button class="unit-remove" onclick="removeUnit(${i})">×</button>`:''}
+    </div>`).join('');
+}
+
+// ─── STUDENT MANAGEMENT ──────────────────────────────────
+function addStudentRow() {
+  studentRows.push({name:'',phone:''});
+  renderStudentRows();
+}
+function removeStudentRow(i) {
+  if(studentRows.length>1){studentRows.splice(i,1);renderStudentRows();}
+}
+function renderStudentRows() {
+  const c = document.getElementById('student-rows');
+  if(!c) return;
+  c.innerHTML = studentRows.map((s,i)=>`
+    <div class="student-row">
+      <input class="form-input" placeholder="Nome completo" value="${s.name}" oninput="studentRows[${i}].name=this.value" />
+      <input class="form-input" placeholder="(11) 99999-9999" value="${s.phone}" oninput="studentRows[${i}].phone=this.value" onkeyup="maskPhone(this)" />
+      ${studentRows.length>1?`<button class="remove-student" onclick="removeStudentRow(${i})">×</button>`:''}
+    </div>`).join('');
+}
+function setInviteMode(mode) {
+  inviteMode = mode;
+  document.querySelectorAll('.invite-opt').forEach(el=>el.classList.remove('selected'));
+  const el = document.getElementById('inv-'+mode);
+  if(el) el.classList.add('selected');
+  const detail = document.getElementById('invite-detail');
+  if(!detail) return;
+  if(mode==='manual'){
+    detail.innerHTML=`
+      <div class="section-label">Adicionar alunos manualmente</div>
+      <div id="student-rows"></div>
+      <button class="add-unit-btn" style="margin-top:6px" onclick="addStudentRow()">
+        <span style="font-size:18px">＋</span> Adicionar outro aluno
+      </button>`;
+    renderStudentRows();
+  } else if(mode==='csv'){
+    detail.innerHTML=`
+      <div class="section-label">Importar via CSV</div>
+      <label class="upload-area" style="cursor:pointer;display:block;text-align:center;padding:20px">
+        <div class="upload-icon">📂</div>
+        <div class="upload-text"><strong>Clique para selecionar o arquivo</strong><br>Formato .CSV · máximo 10.000 linhas</div>
+        <input type="file" accept=".csv" class="upload-input" />
+      </label>
+      <button class="btn-ghost-link" style="margin-top:8px;display:block" onclick="alert('Baixando modelo CSV...')">⬇ Baixar modelo CSV</button>`;
+  } else if(mode==='whatsapp'){
+    detail.innerHTML=`
+      <div class="section-label">Link de convite por WhatsApp</div>
+      <div class="link-box">
+        <span>https://app.versaedu.com.br/convite/abc123</span>
+        <button class="copy-btn" onclick="copyLink()">Copiar</button>
+      </div>
+      <p class="form-hint" style="margin-top:8px">Este link expira em 30 dias. Qualquer colaborador que acessar será cadastrado automaticamente.</p>`;
+  } else if(mode==='qr'){
+    detail.innerHTML=`
+      <div class="section-label">QR Code para impressão</div>
+      <div class="qr-mockup">◼◻◼</div>
+      <p class="form-hint" style="margin-top:10px;text-align:center">Imprima e cole na área de descanso, refeitório ou vestiários.</p>
+      <div style="text-align:center;margin-top:12px">
+        <button class="btn-back" onclick="downloadQR()">⬇ Baixar QR Code PNG</button>
+      </div>`;
+  }
+}
+
+// ─── STEPS ───────────────────────────────────────────────
+function getStep(s) {
+  if(s===0) return step0();
+  if(s===1) return step1();
+  if(s===2) return step2();
+  if(s===3) return step3();
+  if(s===4) return step4();
+  if(s===5) return step5();
+  if(s===6) return step6();
+  if(s===7) return step7();
+  if(s===8) return step8();
+  if(s===9) return step9();
+  return '';
+}
+
+function step0() {
+  return `
+    ${stepHead('1','Olá! Vamos criar sua conta.','Dados de quem está cadastrando a empresa')}
+    <div class="step-body">
+      <p class="step-sub">Leva menos de 5 minutos. Você pode pausar e continuar depois.</p>
+      <div class="form-group"><label class="form-label">Nome completo <span class="req">*</span></label><input class="form-input" type="text" placeholder="Ex: Ana Souza" autocomplete="name" /></div>
+      <div class="form-group"><label class="form-label">E-mail corporativo <span class="req">*</span></label><input class="form-input" type="email" placeholder="ana@empresa.com.br" autocomplete="email" /></div>
+      <div class="form-group"><label class="form-label">WhatsApp <span class="req">*</span></label><input class="form-input" type="tel" placeholder="(11) 99999-9999" onkeyup="maskPhone(this)" autocomplete="tel" /><div class="form-hint">Vamos usar para ativar sua conta e enviar o tutorial.</div></div>
+      <div class="form-group"><label class="form-label">Cargo / Função <span class="req">*</span></label>
+        <div class="select-wrap"><select class="form-select"><option value="">Selecione seu cargo</option><option>Dono / Sócio</option><option>Diretor(a)</option><option>Gerente de RH</option><option>Gerente de Treinamento</option><option>Gerente Operacional</option><option>Analista de RH</option><option>Assistente Administrativo</option><option>Outro</option></select></div>
+      </div>
+    </div>
+    ${footer(null,'Continuar')}`;
+}
+
+function step1() {
+  return `
+    ${stepHead('2','Dados da empresa','Informações básicas da organização contratante')}
+    <div class="step-body">
+      <div class="form-group"><label class="form-label">Razão social / Nome da empresa <span class="req">*</span></label><input class="form-input" type="text" placeholder="Distribuidora ABC Ltda" autocomplete="organization" /></div>
+      <div class="form-group"><label class="form-label">Nome fantasia</label><input class="form-input" type="text" placeholder="Como a empresa é conhecida" /></div>
+      <div class="form-group"><label class="form-label">CNPJ <span class="req">*</span></label><input class="form-input" type="text" placeholder="00.000.000/0001-00" maxlength="18" onkeyup="maskCNPJ(this)" /></div>
+      <div class="form-group"><label class="form-label">Site institucional</label><input class="form-input" type="url" placeholder="www.empresa.com.br" /></div>
+      <div class="form-group"><label class="form-label">Telefone comercial</label><input class="form-input" type="tel" placeholder="(11) 3000-0000" /></div>
+    </div>
+    ${footer('Voltar','Continuar')}`;
+}
+
+function step2() {
+  const UFS = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
+  return `
+    ${stepHead('3','Endereço','Necessário para contrato e nota fiscal')}
+    <div class="step-body">
+      <div class="form-group"><label class="form-label">CEP <span class="req">*</span></label><input class="form-input" type="text" id="c-cep" placeholder="00000-000" maxlength="9" onkeyup="maskCEP(this)" /><div class="form-hint">Preenchemos o endereço automaticamente.</div></div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2"><label class="form-label">Logradouro <span class="req">*</span></label><input class="form-input" type="text" id="c-street" placeholder="Rua, Av., Praça..." /></div>
+        <div class="form-group" style="flex:0 0 90px"><label class="form-label">Número <span class="req">*</span></label><input class="form-input" type="text" placeholder="123" /></div>
+      </div>
+      <div class="form-group"><label class="form-label">Complemento</label><input class="form-input" type="text" placeholder="Sala 12, 2º andar..." /></div>
+      <div class="form-group"><label class="form-label">Bairro</label><input class="form-input" type="text" id="c-neighborhood" placeholder="Centro" /></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Cidade <span class="req">*</span></label><input class="form-input" type="text" id="c-city" placeholder="São Paulo" /></div>
+        <div class="form-group" style="flex:0 0 90px"><label class="form-label">UF <span class="req">*</span></label>
+          <div class="select-wrap"><select class="form-select" id="c-uf"><option value="">UF</option>${UFS.map(u=>`<option>${u}</option>`).join('')}</select></div>
+        </div>
+      </div>
+    </div>
+    ${footer('Voltar','Continuar')}`;
+}
+
+function step3() {
+  const chipHtml = SEGMENTS.map(s=>`<div class="chip" onclick="selectChip(this)">${s}</div>`).join('');
+  return `
+    ${stepHead('4','Segmento e porte','Isso nos ajuda a personalizar cursos e relatórios')}
+    <div class="step-body">
+      <div class="form-group">
+        <label class="form-label">Segmento de atuação <span class="req">*</span></label>
+        <p class="form-hint" style="margin-bottom:10px">Selecione quantos quiser.</p>
+        <div class="chip-grid">${chipHtml}</div>
+      </div>
+      <div class="divider"></div>
+      <div class="form-group">
+        <label class="form-label">Total de colaboradores <span class="req">*</span></label>
+        <div class="radio-grid">
+          ${EMPLOYEE_RANGES.map((r,i)=>`<div class="radio-card${i===1?' selected':''}" onclick="selectRadio(this,'.radio-grid .radio-card')"><div class="radio-card-icon">${r.icon}</div><div class="radio-card-label">${r.label}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+    ${footer('Voltar','Continuar')}`;
+}
+
+function step4() {
+  return `
+    ${stepHead('5','Perfil da empresa','Últimas informações para configurar sua plataforma')}
+    <div class="step-body">
+      <div class="form-group">
+        <label class="form-label">Como você ficou sabendo da Versa? <span class="req">*</span></label>
+        <div class="select-wrap"><select class="form-select"><option value="">Selecione</option><option>Indicação de outro cliente</option><option>LinkedIn</option><option>Instagram / Facebook</option><option>Google</option><option>Evento ou feira</option><option>Contato comercial da Versa</option><option>Outro</option></select></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Principal objetivo com a plataforma <span class="req">*</span></label>
+        <div class="check-list">
+          ${[
+            ['📈','Melhorar performance de vendas','Aumentar conversão e ticket médio'],
+            ['🚀','Agilizar onboarding de novos funcionários','Reduzir tempo de ramp-up'],
+            ['🦺','Garantir treinamentos obrigatórios (SST)','NRs, LGPD, compliance'],
+            ['🎯','Alinhamento de cultura e valores','Engajamento e retenção'],
+            ['📡','Comunicação ativa com linha de frente','Franquias, lojas, plantas'],
+          ].map(([ico,t,s],i)=>`
+            <div class="check-item${i<1?' selected':''}" onclick="this.classList.toggle('selected')">
+              <div class="check-box">${check()}</div>
+              <div><div class="check-text">${ico} ${t}</div><div class="check-subtext">${s}</div></div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Já utiliza alguma plataforma de treinamento?</label>
+        <div class="select-wrap"><select class="form-select"><option value="">Selecione</option><option>Não, é nossa primeira plataforma</option><option>Sim, usamos Excel / WhatsApp</option><option>Sim, outra plataforma LMS</option><option>Sim, treinamentos presenciais</option></select></div>
+      </div>
+    </div>
+    ${footer('Voltar','Continuar')}`;
+}
+
+function step5() {
+  return `
+    ${stepHead('6','Unidades de negócio','Organize sua empresa por lojas, filiais ou plantas')}
+    <div class="step-body">
+      <div class="info-box"><span class="info-box-icon">💡</span> Se sua empresa tem mais de uma loja, filial ou planta industrial, você pode organizá-las aqui. Isso permite controlar quais cursos cada unidade acessa.</div>
+      <div class="form-group">
+        <label class="form-label">Quantas unidades sua empresa possui?</label>
+        <div class="radio-grid radio-grid-2" style="margin-bottom:16px">
+          <div class="radio-card selected" id="unit-opt-one" onclick="selectRadio(this,'.radio-grid-2 .radio-card');document.getElementById('units-section').style.display='none'">
+            <div class="radio-card-icon">🏢</div><div class="radio-card-label">Apenas uma unidade</div>
+          </div>
+          <div class="radio-card" id="unit-opt-multi" onclick="selectRadio(this,'.radio-grid-2 .radio-card');document.getElementById('units-section').style.display='block'">
+            <div class="radio-card-icon">🏬</div><div class="radio-card-label">Mais de uma unidade</div>
+          </div>
+        </div>
+        <div id="units-section" style="display:none">
+          <div class="section-label">Nomeie suas unidades</div>
+          <div id="units-container" class="unit-list"></div>
+          <button class="add-unit-btn" style="margin-top:8px" onclick="addUnit()">
+            <span style="font-size:18px">＋</span> Adicionar unidade
+          </button>
+          <p class="form-hint" style="margin-top:8px">Você pode adicionar mais unidades depois, dentro da plataforma.</p>
+        </div>
+      </div>
+    </div>
+    ${footer('Voltar','Continuar',null)}
+    <script>renderUnits();<\/script>`;
+}
+
+function step6() {
+  const versaHtml = VERSA_COURSES.map((c,i)=>`
+    <div class="course-card${selectedCourses.has(i)?' selected':''}" onclick="toggleCourse(${i})">
+      <div class="course-thumb">${c.icon}</div>
+      <div class="course-info">
+        <div class="course-name">${c.name}</div>
+        <div class="course-meta">${c.meta}</div>
+      </div>
+      <span class="course-badge badge-versa">Versa</span>
+      <div class="course-check">${check()}</div>
+    </div>`).join('');
+  const lockedHtml = LOCKED_COURSES.map(c=>`
+    <div class="course-card locked">
+      <div class="course-thumb" style="background:var(--gray-200)">${c.icon}</div>
+      <div class="course-info">
+        <div class="course-name" style="color:var(--gray-500)">${c.name}</div>
+        <div class="course-meta">${c.meta}</div>
+      </div>
+      <span class="course-badge badge-locked">🔒 Upgrade</span>
+    </div>`).join('');
+  return `
+    ${stepHead('7','Biblioteca de cursos','Escolha quais cursos estarão disponíveis para seus colaboradores')}
+    <div class="step-body">
+      <div class="info-box"><span class="info-box-icon">✅</span> Você pode alterar essa seleção a qualquer momento dentro da plataforma.</div>
+      <div class="section-label">Incluídos no seu plano</div>
+      <div class="course-grid">${versaHtml}</div>
+      <div class="divider"></div>
+      <div class="section-label">Disponíveis com upgrade de plano</div>
+      <div class="course-grid">${lockedHtml}</div>
+      <p class="form-hint" style="margin-top:6px">Fale com nosso time comercial para desbloquear os cursos parceiros.</p>
+    </div>
+    ${footer('Voltar','Confirmar seleção')}`;
+}
+
+function step7() {
+  return `
+    ${stepHead('8','Convidar colaboradores','Cadastre os primeiros alunos da plataforma')}
+    <div class="step-body">
+      <p class="step-sub">Escolha como prefere cadastrar seus colaboradores. Você pode combinar os métodos.</p>
+      <div class="invite-grid">
+        <div class="invite-opt" id="inv-manual" onclick="setInviteMode('manual')">
+          <div class="invite-opt-icon">✏️</div>
+          <div class="invite-opt-label">Cadastro manual</div>
+          <div class="invite-opt-sub">Nome e celular</div>
+        </div>
+        <div class="invite-opt" id="inv-csv" onclick="setInviteMode('csv')">
+          <div class="invite-opt-icon">📋</div>
+          <div class="invite-opt-label">Importar CSV</div>
+          <div class="invite-opt-sub">Planilha de dados</div>
+        </div>
+        <div class="invite-opt" id="inv-whatsapp" onclick="setInviteMode('whatsapp')">
+          <div class="invite-opt-icon">💬</div>
+          <div class="invite-opt-label">Link WhatsApp</div>
+          <div class="invite-opt-sub">Convite por mensagem</div>
+        </div>
+        <div class="invite-opt" id="inv-qr" onclick="setInviteMode('qr')">
+          <div class="invite-opt-icon">◼◻◼</div>
+          <div class="invite-opt-label">QR Code</div>
+          <div class="invite-opt-sub">Para impressão</div>
+        </div>
+      </div>
+      <div id="invite-detail"></div>
+    </div>
+    ${footer('Voltar','Continuar','Pular por agora')}`;
+}
+
+function step8() {
+  const paletteHtml = PALETTES.map((p,i)=>`
+    <div title="${p.label}" style="display:flex;flex-direction:column;align-items:center;gap:5px">
+      <div style="display:flex;gap:3px">
+        ${p.colors.map(c=>`<div class="color-swatch${i===selectedPalette?' selected':''}" style="background:${c};width:28px;height:28px;border-radius:6px;" onclick="selectedPalette=${i};render()"></div>`).join('')}
+      </div>
+      <span style="font-size:10px;color:var(--gray-400)">${p.label}</span>
+    </div>`).join('');
+  return `
+    ${stepHead('9','Identidade visual','Personalize a plataforma com a cara da sua empresa')}
+    <div class="step-body">
+      <div class="form-group">
+        <label class="form-label">Logo da empresa</label>
+        <label class="upload-area" id="upload-area" style="display:block;cursor:pointer">
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-text"><strong>Clique para enviar o logo</strong><br>PNG ou SVG · fundo transparente recomendado · máx 2MB</div>
+          <input type="file" accept=".png,.svg,.jpg,.jpeg" class="upload-input" onchange="handleLogoUpload(this)" />
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Paleta de cores</label>
+        <p class="form-hint" style="margin-bottom:10px">Escolha uma paleta pré-definida ou personalize com suas cores.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end">${paletteHtml}</div>
+      </div>
+    </div>
+    ${footer('Voltar','Finalizar configuração',null)}`;
+}
+
+function step9() {
+  return `
+    <div class="success-body">
+      <div class="confetti-row">🎊 🎉 🥳 🎊 🎉</div>
+      <span class="success-icon">🚀</span>
+      <h2 class="success-title">Sua plataforma está pronta!</h2>
+      <p class="success-sub">Parabéns! O Universa já está configurado e pronto para transformar o aprendizado da sua equipe. Antes de começar a explorar, recomendamos assistir ao tutorial rápido — leva menos de 3 minutos.</p>
+      <div class="video-cta" onclick="alert('Abrindo tutorial em vídeo...')">
+        <div class="video-play">▶</div>
+        <div class="video-cta-text">
+          <p>Tutorial rápido de boas-vindas</p>
+          <span>2 min 47 seg · Recomendado antes de começar</span>
+        </div>
+      </div>
+      <a href="https://app.versaedu.com.br/" class="btn-explore">
+        Começar a explorar ${arrow()}
+      </a>
+      <div class="success-skip">
+        <a href="https://app.versaedu.com.br/" style="color:var(--gray-400)">Pular tutorial e ir direto para a plataforma</a>
+      </div>
+    </div>`;
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
